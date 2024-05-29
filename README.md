@@ -1,6 +1,32 @@
 # Downloading-of-NASA-PACE-Image-data-using-our-STS-Customized-HyperCoast-Software
 We have created a Jupyter Notebook for you to download from GitHub so that you too can download PACE data use HyperCoast features to view and process the PACE data. 
 
+# **Visualizing NASA PACE data interactively with [HyperCoast](https://github.com/opengeos/HyperCoast)**
+---
+
+This notebook demonstrates how to visualize [Plankton, Aerosol, Cloud, ocean Ecosystem (PACE)](https://pace.gsfc.nasa.gov) data interactively with HyperCoast.
+
+The Open Geospatial Solutions ([opengeos](https://github.com/opengeos)) GitHub organization hosts a collection of open-source geospatial software projects. The projects are developed by a community of geospatial software developers and researchers. The projects are maintained by the community and are free to use and modify. The projects are open-source and are licensed under the MIT license. If you are interested in hosting an open-source project with us, please submit a request on the Discussion Board. We always welcome new contributors and collaborators.
+
+# **HyperCoast**
+---
+
+The following is taken from the this [page](https://github.com/opengeos/HyperCoast?tab=readme-ov-file)
+
+
+**A Python package for visualizing and analyzing hyperspectral data in coastal regions**
+
+    - Free software: MIT License
+    - Documentation: https://hypercoast.org
+
+## Features
+---
+
+    - Interactive visualization and analysis of hyperspectral data (e.g., EMIT, PACE)
+    - Interactive extraction and visualization of spectral signatures
+    - Saving spectral signatures as CSV files
+
+
 The Science and Technology Society (STS) of Sarasota-Manatee Counties is very aware that Florida has some stiff challenges in facing an old problem of Red Tide (Karenia brevis). When this algal bloom drifts toward our shoreline, we have problems. Red Tide gives off a toxic vapor that attacks the lungs, kills the fish and other aquatic wildlife and results in a huge negative impact on the economy and tourism. Yes, Red Tide has been around for millions of years, but is what can we do the mitigate the impact? Is it possible for us to at least identify and track these harmful algal blooms as an early warning system? STS is very much involved.  
 
 It just so happens that NASA has just launched a new satellite called PACE (Plankton, Aerosol, Cloud Ocean Ecosystem) with hyperspectal data that focuses on our ocean ecosystem and microscopic algae called phytoplankton including our Red Tide species. 
