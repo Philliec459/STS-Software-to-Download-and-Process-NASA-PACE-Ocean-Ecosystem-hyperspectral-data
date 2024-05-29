@@ -9,3 +9,15 @@ The problem with PACE data is that it is hyperspectral data in that each pixel i
 
 We have created a Jupyter Notebook for you to download from GitHub so that you too can download PACE data use HyperCoast features to view and process the PACE data. In addition, we have extracted the source code and run it directly in each cell to better understand how the actual source code can be used to view the PACE data and use these data to calculate Chlorophyll and in time Red Tide blooms. 
 
+We have also created a Jupyter Notebook called 1_netCDF4_PACE_Earth_Data_Visualize_brie_ver___.ipynb that uses HyperCoast to download the data, but then uses more of the NetCDF .nc file structure that allows for a more straight forward python approach to working with PACE data, but lacks the Open Geospatial foundation that has more features and will grow with the future, However, but methods are presented here. 
+
+We also have included the original Access Data notebook proposed from the Ocean Color Instrument (OCI).
+
+**Authors:** Anna Windle (NASA, SSAI), Ian Carroll (NASA, UMBC), Carina Poulin (NASA, SSAI)
+
+> **PREREQUISITES**
+>
+> This notebook has the following prerequisites:
+> - An **<a href="https://urs.earthdata.nasa.gov/" target="_blank">Earthdata Login</a>**
+>   account is required to access data from the NASA Earthdata system, including NASA ocean color data.
+> - There are no prerequisite notebooks for this module.
