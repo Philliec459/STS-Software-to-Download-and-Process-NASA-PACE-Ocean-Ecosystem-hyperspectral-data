@@ -26,6 +26,8 @@ The following is taken from the this [page](https://github.com/opengeos/HyperCoa
     - Interactive extraction and visualization of spectral signatures
     - Saving spectral signatures as CSV files
 
+[image1](HyperCoast_Map.png)
+
 
 The Science and Technology Society (STS) of Sarasota-Manatee Counties is very aware that Florida has some stiff challenges in facing an old problem of Red Tide (Karenia brevis). When this algal bloom drifts toward our shoreline, we have problems. Red Tide gives off a toxic vapor that attacks the lungs, kills the fish and other aquatic wildlife and results in a huge negative impact on the economy and tourism. Yes, Red Tide has been around for millions of years, but is what can we do the mitigate the impact? Is it possible for us to at least identify and track these harmful algal blooms as an early warning system? STS is very much involved.  
 
