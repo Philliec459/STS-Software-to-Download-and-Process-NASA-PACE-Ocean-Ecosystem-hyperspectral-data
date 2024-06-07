@@ -1,18 +1,40 @@
-# Downloading-of-NASA-PACE-Image-data-using-our-STS-Customized-HyperSpectral-Software
-The Science and Technology Society (STS) of Sarasota-Manatee Counties, Florida have created a few Jupyter Notebooks used to download PACE data and then process and display this new PACE hyperspectral data available from NASA. 
+# Downloading NASA PACE Image Data Using STS Customized Hyperspectral Software
 
-Florida faces some stiff challenges in dealing the old problem of Red Tide (Karenia brevis). When this algal bloom drifts toward our shorelines, we have problems. Red Tide gives off a toxic vapor that attacks the lungs, kills the fish and other aquatic wildlife and have a huge negative impact on the economy and tourism. Red Tide has been around for millions of years, but what can we with our latest PACE technology to track and possibly the mitigate the impact now? Is it possible to identify and track these Harmful Algal Blooms (HAB) as an early warning system? STS and our citizen scientists would like to be a part of the solution.    
+## Overview
+The Science and Technology Society (STS) of Sarasota-Manatee Counties, Florida, has developed a series of Jupyter Notebooks to facilitate the downloading, processing, and visualization of PACE hyperspectral data from NASA. These tools are particularly aimed at addressing the significant challenge of Red Tide (Karenia brevis) in Florida, which has severe impacts on health, marine life, and the local economy.
 
-NASA has just launched a new satellite called PACE (Plankton, Aerosol, Cloud Ocean Ecosystem) with hyperspectral data that focuses on our ocean ecosystem and microscopic algae called phytoplankton including the Red Tide species. PACE is hyperspectral data in that each pixel in a PACE satellite image has 184 channels of spectral wavelength data from 339nm in the UV range to 719nm in the near red edge of the visible spectrum. This is a lot of data and is therefore stored in netCDF4 file format as .nc files downloaded from NASA [EarthData](https://urs.earthdata.nasa.gov/). We use Geospatial Solution's HyperCoast to download the PACE data. After the download, you can view individual channel data in maps or even view the wavelength spectrum for each pixel that you request. In addition, we can then use then use the hyperspectral data structure to calculate our own indices such as Chlorophyll a. Our goal is to be able to detect and track Red Tide algal blooms using PACE data. 
+## Background
+Red Tide is an algal bloom that releases toxic vapors, affecting respiratory health, killing marine wildlife, and damaging the tourism industry. Although Red Tide has existed for millions of years, advancements in technology, specifically through NASA's PACE (Plankton, Aerosol, Cloud, Ocean Ecosystem) satellite, offer new opportunities to identify and potentially  track these Harmful Algal Blooms (HABs).
 
-We have created a Jupyter Notebook so that you too can download PACE data using HyperCoast and then view and process the data in python.
+### PACE Satellite
+NASA's PACE satellite provides hyperspectral data focusing on ocean ecosystems and phytoplankton, including Red Tide species. Each pixel in a PACE image contains 184 channels of spectral wavelength data ranging from 339nm (UV) to 719nm (near red edge of the visible spectrum). This data is stored in netCDF4 format (.nc files) and is accessible through NASA's [EarthData](https://urs.earthdata.nasa.gov/). You need to create your own EarthData account. 
 
-![image1](chlor_a.png)
+## STS Tools and Methodology
+STS uses Geospatial Solution's HyperCoast to download PACE data. After obtaining the data, users can visualize individual channel data in maps or analyze the wavelength spectrum for each pixel using Python. We have also developed custom indices, such as Chlorophyll a, to enhance our analysis capabilities. Our ultimate goal is to detect and track Red Tide algal blooms using PACE data.
 
+### Jupyter Notebook
+We have created a Jupyter Notebook that allow users to:
+1. Download PACE data using HyperCoast.
+2. Process and visualize the data in Python.
 
-![image1](wavelength.png)
+This notebook provide a guide for users to access and analyze hyperspectral data, contributing to the early detection and tracking of Harmful Algal Blooms (HABs).
 
-We also have included the original PACE Access Data notebook proposed from the Ocean Color Instrument (OCI).
+## Example Outputs
+Below are examples of the outputs you can generate using our notebooks:
+
+![Chlorophyll a Map](chlor_a.png)
+*Example of a Chlorophyll a concentration map.*
+
+![Wavelength Spectrum](wavelength.png)
+*Example of a wavelength spectrum for a specific pixel.*
+
+## Additional Resources
+The repository also includes the original PACE Access Data notebook, as proposed by the Ocean Color Instrument (OCI), for users who wish to explore further.
+
+---
+
+By using these tools, STS and citizen scientists aim to be part of the solution in mitigating the impacts of Red Tide through advanced hyperspectral data analysis.
+
 
 **Authors:** Anna Windle (NASA, SSAI), Ian Carroll (NASA, UMBC), Carina Poulin (NASA, SSAI)
 
