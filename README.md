@@ -29,14 +29,15 @@ Below are examples of the outputs you can generate using our notebooks:
 *Example of a wavelength spectrum for a specific pixel.*
 
 ## Additional Resources
-The repository also includes the original PACE Access Data notebook, as proposed by the Ocean Color Instrument (OCI), for users who wish to explore further.
+The repository also includes the original PACE Access Data notebook, as proposed by the Ocean Color Instrument (OCI), for users who wish to explore further:
 
+  Authors: Anna Windle (NASA, SSAI), Ian Carroll (NASA, UMBC), Carina Poulin (NASA, SSAI)
+  
 ---
 
 By using these tools, STS and citizen scientists aim to be part of the solution in mitigating the impacts of Red Tide through advanced hyperspectral data analysis.
 
 
-**Authors:** Anna Windle (NASA, SSAI), Ian Carroll (NASA, UMBC), Carina Poulin (NASA, SSAI)
 
 > **PREREQUISITES**
 >
