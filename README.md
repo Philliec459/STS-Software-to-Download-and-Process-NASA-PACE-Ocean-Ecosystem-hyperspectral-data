@@ -100,8 +100,7 @@ plot_wavelength(target_latitude = 25.3280 , target_longitude = -83.9747)
 >*Example of a wavelength spectrum for a specific pixel.*
 ---
 
-
-
+### Reflectance Maps at any of the above wavelengths:
 
 ```python
 def Map_Reflectance(target_wavelength):
