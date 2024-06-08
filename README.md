@@ -34,6 +34,8 @@ results, gdf = hypercoast.search_pace(
     count=-1,  # use -1 to return all datasets
     return_gdf=True,
 )
+
+hypercoast.download_pace(results[:20], out_dir="data")
 ```
 
 
