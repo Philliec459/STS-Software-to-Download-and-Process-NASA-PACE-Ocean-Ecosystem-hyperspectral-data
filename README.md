@@ -191,8 +191,9 @@ chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blend
 
 >![Chlorophyll a Map](chlora.png)
 >*Example of a Chlorophyll a concentration map.*
----
+
 Since out Webinar on Pace on June 7, we are going to use [WorldView](https://worldview.earthdata.nasa.gov/?v=-99.09292764857383,18.857870096514613,-73.64517039265459,32.90845125461138&l=Reference_Labels_15m(hidden),Reference_Features_15m(hidden),Coastlines_15m,OCI_PACE_Chlorophyll_a,VIIRS_NOAA20_CorrectedReflectance_TrueColor(hidden),VIIRS_SNPP_CorrectedReflectance_TrueColor(hidden),MODIS_Aqua_CorrectedReflectance_TrueColor(hidden),MODIS_Terra_CorrectedReflectance_TrueColor&lg=true&t=2024-06-07-T14%3A54%3A38Z) calculated Chlorophyll a to tweak our code and displays. 
+---
 
 ```python
 def plot_wavelength(target_latitude, target_longitude):
