@@ -64,7 +64,7 @@ plt.title(f'Reflectance at {target_wavelength} nm around Florida')
 plt.show()
 
 Map_Reflectance(target_wavelength=430)
-'''
+```
 
 
 ![Wavelength_Map](430nm.png)
@@ -73,53 +73,50 @@ Map_Reflectance(target_wavelength=430)
 ![Chlorophyll a Map](chlor_a.png)
 *Example of a Chlorophyll a concentration map.*
 
-                def plot_wavelength(target_latitude, target_longitude):
-                    # Find the closest grid point to the target latitude and longitude
-                    lat_idx, lon_idx = find_closest_grid_point(latitudes, longitudes, target_latitude, target_longitude)
-                
-                    # Extract reflectance data for the grid point across all wavelengths
-                    reflectance_spectrum = reflectance_data[lat_idx, lon_idx, :]
-                
-                    # Ensure the dimensions match
-                    print(f"Wavelengths shape: {wavelengths.shape}")
-                    print(f"Reflectance spectrum shape: {reflectance_spectrum.shape}")
-                
-                    # Plot reflectance vs. wavelength
-                    plt.figure(figsize=(12, 6))
-                    #plt.plot(wavelengths, reflectance_spectrum, marker='o',color='red')
-                    plt.plot(wavelengths, reflectance_spectrum,color='red',linewidth=3)
-                    #plt.yscale('log')
-                    plt.ylim(0,0.02)
-                    plt.xlim(300,1000)
-                    
-                    plt.xlabel('Wavelength (nm)')
-                    plt.ylabel('Reflectance')
-                    plt.title(f'PACE Reflectance Spectrum at Lat: {latitudes[lat_idx, lon_idx]}, Lon: {longitudes[lat_idx, lon_idx]}')
-                
-                
-                    # Edge colors picked from image below and sent to Mike 
-                    plt.axvspan(300, 400, alpha=0.5, color='purple',label='Near UV from 300-400m')
-                    plt.axvspan(400, 450, alpha=0.5, color='violet',label='Violet 400-450m')
-                    plt.axvspan(450, 495, alpha=0.2, color='blue',label='Blue from 450-495nm')
-                    plt.axvspan(495, 550, alpha=0.2, color='green',label='Green from 495-550nm')
-                    plt.axvspan(550, 590, alpha=0.2, color='yellow',label='Yellow from 550-590nm')
-                    plt.axvspan(590, 630, alpha=0.2, color='orange',label='Orange from 590-630nm')
-                    plt.axvspan(630, 700, alpha=0.2, color='red',label='Red from 630-700nm')
-                    plt.axvspan(700, 1000, alpha=1, color='lavender',label='Near IR from 700-1,000nm')
-                
-                    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
-                
-                
-                    plt.grid(True)
-                    plt.show()
 
-        plot_wavelength(target_latitude = 25.3280 , target_longitude = -83.9747)
+```python
+def plot_wavelength(target_latitude, target_longitude):
+# Find the closest grid point to the target latitude and longitude
+lat_idx, lon_idx = find_closest_grid_point(latitudes, longitudes, target_latitude, target_longitude)
+
+# Extract reflectance data for the grid point across all wavelengths
+reflectance_spectrum = reflectance_data[lat_idx, lon_idx, :]
+
+# Ensure the dimensions match
+print(f"Wavelengths shape: {wavelengths.shape}")
+print(f"Reflectance spectrum shape: {reflectance_spectrum.shape}")
+
+# Plot reflectance vs. wavelength
+plt.figure(figsize=(12, 6))
+#plt.plot(wavelengths, reflectance_spectrum, marker='o',color='red')
+plt.plot(wavelengths, reflectance_spectrum,color='red',linewidth=3)
+#plt.yscale('log')
+plt.ylim(0,0.02)
+plt.xlim(300,1000)
+
+plt.xlabel('Wavelength (nm)')
+plt.ylabel('Reflectance')
+plt.title(f'PACE Reflectance Spectrum at Lat: {latitudes[lat_idx, lon_idx]}, Lon: {longitudes[lat_idx, lon_idx]}')
 
 
+# Edge colors picked from image below and sent to Mike 
+plt.axvspan(300, 400, alpha=0.5, color='purple',label='Near UV from 300-400m')
+plt.axvspan(400, 450, alpha=0.5, color='violet',label='Violet 400-450m')
+plt.axvspan(450, 495, alpha=0.2, color='blue',label='Blue from 450-495nm')
+plt.axvspan(495, 550, alpha=0.2, color='green',label='Green from 495-550nm')
+plt.axvspan(550, 590, alpha=0.2, color='yellow',label='Yellow from 550-590nm')
+plt.axvspan(590, 630, alpha=0.2, color='orange',label='Orange from 590-630nm')
+plt.axvspan(630, 700, alpha=0.2, color='red',label='Red from 630-700nm')
+plt.axvspan(700, 1000, alpha=1, color='lavender',label='Near IR from 700-1,000nm')
+
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
 
 
+plt.grid(True)
+plt.show()
 
-
+plot_wavelength(target_latitude = 25.3280 , target_longitude = -83.9747)
+```
 
 ![Wavelength Spectrum](wavelength.png)
 *Example of a wavelength spectrum for a specific pixel.*
