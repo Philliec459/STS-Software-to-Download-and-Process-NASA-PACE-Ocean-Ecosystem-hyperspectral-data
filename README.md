@@ -22,7 +22,11 @@ NASA's PACE satellite provides hyperspectral data focusing on ocean ecosystems a
          699 701 702 703]
 
 ## STS Tools and Methodology
-STS uses Geospatial Solution's HyperCoast software to download PACE data. We use HyperCoast because it does show the footprint of available data prior to downloading. The user can then choose the PACE data they want for their analysis from the list of available data.The user can then visualize individual channel data in maps at a particular wavelength or analyze the entire wavelength spectrum for any pixel on the map using Python. We have also developed custom indices, such as Chlorophyll a, to enhance our analysis capabilities. Our ultimate goal is to detect and track Red Tide algal blooms using PACE data. We have a lot to learn on this subject. 
+STS uses Geospatial Solution's HyperCoast software to download PACE data. We use HyperCoast because it does show the footprint of available data prior to downloading. The user can then choose the PACE data they want for their analysis from the list of available data.
+
+>![choose](choose_file.png)
+
+The user can then visualize individual channel data in maps at a particular wavelength or analyze the entire wavelength spectrum for any pixel on the map using Python. We have also developed custom indices, such as Chlorophyll a, to enhance our analysis capabilities. Our ultimate goal is to detect and track Red Tide algal blooms using PACE data. We have a lot to learn on this subject. 
 
 ### Jupyter Notebook
 We have created a Jupyter Notebook that allow users to:
@@ -66,12 +70,12 @@ Map_Reflectance(target_wavelength=430)
 ```
 
 
-![Wavelength_Map](430nm.png)
-*Example of 430nm Reflectance map.*
+>![Wavelength_Map](430nm.png)
+>*Example of 430nm Reflectance map.*
 ---
 
-![Chlorophyll a Map](chlora.png)
-*Example of a Chlorophyll a concentration map.*
+>![Chlorophyll a Map](chlora.png)
+>*Example of a Chlorophyll a concentration map.*
 ---
 
 
@@ -116,8 +120,8 @@ def plot_wavelength(target_latitude, target_longitude):
 plot_wavelength(target_latitude = 25.3280 , target_longitude = -83.9747)
 ```
 
-![Wavelength Spectrum](wavelength.png)
-*Example of a wavelength spectrum for a specific pixel.*
+>![Wavelength Spectrum](wavelength.png)
+>*Example of a wavelength spectrum for a specific pixel.*
 ---
 
 
