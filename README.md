@@ -188,11 +188,11 @@ chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blend
                              (chlor_a_OCx[blended_CI_mask] * (chlor_aCI[blended_CI_mask] - t1)) / (t2 - t1))
 
 ```
->![Chlorophyll a Map](chlor_a_zoom.png)
+>![Chlorophyll a Map](chlor_a_zoom2.png)
 >*Example of a Chlorophyll a concentration map May 12, 2024.*
->![Chlorophyll a Map](chlor_a.png)
+>![Chlorophyll a Map](chlor_a2.png)
 >*Example of a Chlorophyll a concentration map May 12, 2024.*
->![Chlorophyll a Map](WorldView.png)
+>![Chlorophyll a Map](WorldView2.png)
 >*WorldView Chlorophyll a map May 12, 2024.*
 >
 
