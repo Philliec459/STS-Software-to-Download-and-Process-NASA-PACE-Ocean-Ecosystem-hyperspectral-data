@@ -7,7 +7,19 @@ The Science and Technology Society (STS) of Sarasota-Manatee Counties, Florida, 
 Red Tide is an algal bloom that releases toxic vapors, affecting respiratory health, killing marine wildlife, and damaging the tourism industry. Although Red Tide has existed for millions of years, advancements in technology, specifically through NASA's PACE (Plankton, Aerosol, Cloud, Ocean Ecosystem) satellite, offer new opportunities to identify and potentially track these Harmful Algal Blooms (HABs). This is work in progress.
 
 ### PACE Satellite
-NASA's PACE satellite provides hyperspectral data focusing on ocean ecosystems and phytoplankton, including Red Tide species. Each pixel in a PACE image contains 184 channels of spectral wavelength data ranging from 339nm (UV) to 719nm (near red edge of the visible spectrum). These data is stored in netCDF4 format (.nc files) and are accessible through NASA's [EarthData](https://urs.earthdata.nasa.gov/) website. You will to create your own EarthData account to download data. 
+NASA's PACE satellite provides hyperspectral data focusing on ocean ecosystems and phytoplankton, including Red Tide species. Each pixel in a PACE image contains 184 channels of spectral wavelength data ranging from 339nm (UV) to 719nm (near red edge of the visible spectrum). These data is stored in netCDF4 format (.nc files) and are accessible through NASA's [EarthData](https://urs.earthdata.nasa.gov/) website. You will to create your own EarthData account to download data.
+
+        Wavelengths: [315 316 318 320 322 325 327 329 331 334 337 339 341 344 346 348 351 353
+         356 358 361 363 366 368 371 373 375 378 380 383 385 388 390 393 395 398
+         400 403 405 408 410 413 415 418 420 422 425 427 430 432 435 437 440 442
+         445 447 450 452 455 457 460 462 465 467 470 472 475 477 480 482 485 487
+         490 492 495 497 500 502 505 507 510 512 515 517 520 522 525 527 530 532
+         535 537 540 542 545 547 550 553 555 558 560 563 565 568 570 573 575 578
+         580 583 586 588 591 593 596 598 601 603 605 608 610 613 615 618 620 623
+         625 627 630 632 635 637 640 641 642 643 645 646 647 648 650 651 652 653
+         655 656 657 658 660 661 662 663 665 666 667 668 670 671 672 673 675 676
+         677 678 679 681 682 683 684 686 687 688 689 691 692 693 694 696 697 698
+         699 701 702 703]
 
 ## STS Tools and Methodology
 STS uses Geospatial Solution's HyperCoast software to download PACE data. We use HyperCoast because it does show the footprint of available data prior to downloading. The user can then choose the PACE data they want for their analysis from the list of available data.The user can then visualize individual channel data in maps at a particular wavelength or analyze the entire wavelength spectrum for any pixel on the map using Python. We have also developed custom indices, such as Chlorophyll a, to enhance our analysis capabilities. Our ultimate goal is to detect and track Red Tide algal blooms using PACE data. We have a lot to learn on this subject. 
