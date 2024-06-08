@@ -34,35 +34,38 @@ This notebook provide a guide for users to access and analyze hyperspectral data
 ## Example Outputs
 Below are examples of the outputs you can generate using our notebooks:
 
-                def Map_Reflectance(target_wavelength):
-                    wavelength_index = np.argmin(np.abs(wavelengths - target_wavelength))
-                    reflectance_at_target = reflectance_data[:, :, wavelength_index]
-                
-                    # Plot the reflectance
-                    plt.figure(figsize=(12, 8))    
-                    map_projection = ccrs.PlateCarree()
-                    ax = plt.axes(projection=map_projection)
-                    ax.set_extent([-98, -77, 20, 35], crs=ccrs.PlateCarree())  # Florida region
-                  
-                    
-                    # Plot the reflectance data using pcolormesh
-                    im = ax.pcolormesh(lon, lat, reflectance_at_target, cmap='rainbow')
-                    ax.coastlines(resolution='10m')
-                    ax.add_feature(cartopy.feature.STATES, linewidth=0.5)
-                    
-                    # Set ticks and format them
-                    ax.set_xticks(np.linspace(-91, -77, 5), crs=map_projection)
-                    ax.set_yticks(np.linspace(20, 35, 5), crs=map_projection)
-                    lon_formatter = LongitudeFormatter(zero_direction_label=True)
-                    lat_formatter = LatitudeFormatter()
-                    ax.xaxis.set_major_formatter(lon_formatter)
-                    ax.yaxis.set_major_formatter(lat_formatter)
-                    
-                    plt.colorbar(im, label=f'Reflectance at {target_wavelength} nm')
-                    plt.title(f'Reflectance at {target_wavelength} nm around Florida')
-                    plt.show()
+```python
+def Map_Reflectance(target_wavelength):
+wavelength_index = np.argmin(np.abs(wavelengths - target_wavelength))
+reflectance_at_target = reflectance_data[:, :, wavelength_index]
 
-        Map_Reflectance(target_wavelength=430)
+# Plot the reflectance
+plt.figure(figsize=(12, 8))    
+map_projection = ccrs.PlateCarree()
+ax = plt.axes(projection=map_projection)
+ax.set_extent([-98, -77, 20, 35], crs=ccrs.PlateCarree())  # Florida region
+
+
+# Plot the reflectance data using pcolormesh
+im = ax.pcolormesh(lon, lat, reflectance_at_target, cmap='rainbow')
+ax.coastlines(resolution='10m')
+ax.add_feature(cartopy.feature.STATES, linewidth=0.5)
+
+# Set ticks and format them
+ax.set_xticks(np.linspace(-91, -77, 5), crs=map_projection)
+ax.set_yticks(np.linspace(20, 35, 5), crs=map_projection)
+lon_formatter = LongitudeFormatter(zero_direction_label=True)
+lat_formatter = LatitudeFormatter()
+ax.xaxis.set_major_formatter(lon_formatter)
+ax.yaxis.set_major_formatter(lat_formatter)
+
+plt.colorbar(im, label=f'Reflectance at {target_wavelength} nm')
+plt.title(f'Reflectance at {target_wavelength} nm around Florida')
+plt.show()
+
+Map_Reflectance(target_wavelength=430)
+'''
+
 
 ![Wavelength_Map](430nm.png)
 *Example of a Chlorophyll a concentration map.*
