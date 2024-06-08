@@ -1,4 +1,4 @@
-![logo](PACE.png)
+![logo](PACE2.png)
 ![logo](sts_nasa.png)
 
 # Downloading NASA PACE Image Data Using STS Customized Hyperspectral Software
@@ -26,6 +26,16 @@ NASA's [PACE](https://pace.gsfc.nasa.gov) satellite provides hyperspectral data 
 
 ## STS Tools and Methodology
 STS uses Geospatial Solution's HyperCoast software to download PACE data. We use HyperCoast because it does show the footprint of available data prior to downloading. The user can then choose the PACE data they want for their analysis from the list of available data.
+
+```python
+results, gdf = hypercoast.search_pace(
+    bounding_box=(-83, 25, -81, 28),
+    temporal=("2024-05-15", "2024-12-31"),
+    count=-1,  # use -1 to return all datasets
+    return_gdf=True,
+)
+```
+
 
 >![choose](choose_file.png)
 
