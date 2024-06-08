@@ -69,7 +69,7 @@ Map_Reflectance(target_wavelength=430)
 ![Wavelength_Map](430nm.png)
 *Example of 430nm Reflectance map.*
 
-![Chlorophyll a Map](chlor_a.png)
+![Chlorophyll a Map](chlora.png)
 *Example of a Chlorophyll a concentration map.*
 
 
