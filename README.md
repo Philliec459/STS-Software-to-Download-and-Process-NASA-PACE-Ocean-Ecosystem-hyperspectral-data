@@ -112,12 +112,6 @@ band_510 = np.argmin(np.abs(wavelengths - 510))
 band_555 = np.argmin(np.abs(wavelengths - 555))
 band_670 = np.argmin(np.abs(wavelengths - 670))
 
-print("Band 442 index:", band_442)
-print("Band 490 index:", band_490)
-print("Band 510 index:", band_510)
-print("Band 555 index:", band_555)
-print("Band 670 index:", band_670)
-
 # Extract reflectance values at the required wavelengths
 Rrs_442 = reflectance_data[:, :, band_442]
 Rrs_490 = reflectance_data[:, :, band_490]
