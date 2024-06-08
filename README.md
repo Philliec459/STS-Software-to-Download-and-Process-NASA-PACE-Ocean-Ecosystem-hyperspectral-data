@@ -137,8 +137,9 @@ Map_Reflectance(target_wavelength=430)
 >![Wavelength_Map](430nm2.png)
 >*Example of 430nm Reflectance map May 12, 2024.*
 ---
+### Process PACE data for Chlorophyll a:
 
-### This is our attempt to calculate Chlorophyll a using PACE data trying to follow the methods described in the source below:
+#### This is our attempt to calculate Chlorophyll a using PACE data trying to follow the methods described in the source below:
 ```python
 
 '''
