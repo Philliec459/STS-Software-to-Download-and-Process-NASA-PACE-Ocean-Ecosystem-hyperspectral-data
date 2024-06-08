@@ -74,6 +74,119 @@ Map_Reflectance(target_wavelength=430)
 >*Example of 430nm Reflectance map.*
 ---
 
+
+```python
+
+'''
+Earth Data Tools Method Datad 2023 used for PACE Data
+
+Viewing Chlorophyll a — Algorithm Publication Tool.pdf
+
+Jeremy Werdell and John O'Reilly and Chuanmin Hu and Lian Feng and 
+Zhongping Lee and Bryan Franz and Sean Bailey and Christopher Proctor, 
+Chlorophyll a, Earth Data Publications Tool, November 6, 2023
+'''
+
+# Assume 'wavelengths' and 'reflectance_data' are defined
+# wavelengths = ...
+# reflectance_data = ...
+
+# Identify indices for the required bands
+band_442 = np.argmin(np.abs(wavelengths - 442))
+band_490 = np.argmin(np.abs(wavelengths - 490))
+band_510 = np.argmin(np.abs(wavelengths - 510))
+band_555 = np.argmin(np.abs(wavelengths - 555))
+band_670 = np.argmin(np.abs(wavelengths - 670))
+
+print("Band 442 index:", band_442)
+print("Band 490 index:", band_490)
+print("Band 510 index:", band_510)
+print("Band 555 index:", band_555)
+print("Band 670 index:", band_670)
+
+# Extract reflectance values at the required wavelengths
+Rrs_442 = reflectance_data[:, :, band_442]
+Rrs_490 = reflectance_data[:, :, band_490]
+Rrs_510 = reflectance_data[:, :, band_510]
+Rrs_555 = reflectance_data[:, :, band_555]
+Rrs_670 = reflectance_data[:, :, band_670]
+
+'''
+1. chlor_a is first calculated using the CI algorithm, which is a three-band reflectance difference algorithm employing the difference between sensor specific Rrs in the green band and a reference formed linearly between Rrs in the blue and red bands (bands are instrument specific - see Table 1):
+CI = Rrs(λgreen) − [Rrs(λblue) + (λgreen − λblue)/(λred − λblue) ∗ (Rrs(λred) − Rrs(λblue))] 
+'''
+
+# Calculate CI
+CI = Rrs_555 - (Rrs_442 + (555 - 442) / (670 - 442) * (Rrs_670 - Rrs_442))
+
+# A calculation of CI chlor_a is done using two coefficients (a0CI = -0.4287 and a1CI = 230.47) specified by Hu et al (2019), where:
+# chlor_a = 10**(-0.4287 + 230.47 * CI)
+# is this used for anything?
+
+
+'''
+2. chlor_a is then calculated following the OCx algorithm, which is a fourth-order polynomial relationship between a ratio of Rrs and chlor_a: 
+'''
+    
+# Calculate chlor_a using CI
+chlor_aCI = 10**(0.32814 + -3.20725*np.log10(Rrs_442 / Rrs_555)**1 + 
+                            3.22969*np.log10(Rrs_442 / Rrs_555)**2 + 
+                           -1.36769*np.log10(Rrs_442 / Rrs_555)**3 + 
+                           -0.81739*np.log10(Rrs_442 / Rrs_555)**4)
+
+
+'''
+OCx Method (I think?)
+'''
+
+# Define OCx algorithm coefficients for OC4v6 as an example
+a0, a1, a2, a3, a4 = -0.3704, -3.9622, 1.7441, 1.4487, -0.2874
+
+# Calculate the OCx ratio
+R = np.maximum.reduce([Rrs_442 / Rrs_555, Rrs_490 / Rrs_555, Rrs_510 / Rrs_555])
+
+
+# Calculate chlor_a using OCx
+log_chlor_a_OCx = a0 + a1 * np.log10(R) + a2 * np.log10(R)**2 + a3 * np.log10(R)**3 + a4 * np.log10(R)**4
+chlor_a_OCx = 10**log_chlor_a_OCx
+
+
+
+'''
+3. For chlor_a retrievals below 0.25 mg m-3, the CI algorithm is used.
+
+For chlor_a retrievals above 0.35 mg m-3, the OCx algorithm is used. 
+
+In between these values, the CI and OCx algorithm are blended using a weighted approach:
+'''
+
+
+# Initialize the chlorophyll-a concentration array
+chl_a_CI = np.zeros_like(CI)
+
+# Define thresholds
+t1 = 0.25
+t2 = 0.35
+
+# Apply the OCI algorithm to estimate chlorophyll concentration
+positive_CI_mask = chlor_aCI > t2
+negative_CI_mask = chlor_aCI < t1
+blended_CI_mask = (~positive_CI_mask) & (~negative_CI_mask)
+
+# Calculate chlorophyll-a for positive CI values
+chl_a_CI[positive_CI_mask] = chlor_aCI[positive_CI_mask]
+
+# Calculate chlorophyll-a for negative CI values
+chl_a_CI[negative_CI_mask] = chlor_a_OCx[negative_CI_mask]
+
+# Blend CI and OCx for values in between
+chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blended_CI_mask])) / (t2 - t1) +
+                             (chlor_a_OCx[blended_CI_mask] * (chlor_aCI[blended_CI_mask] - t1)) / (t2 - t1))
+
+
+
+```
+
 >![Chlorophyll a Map](chlora.png)
 >*Example of a Chlorophyll a concentration map.*
 ---
