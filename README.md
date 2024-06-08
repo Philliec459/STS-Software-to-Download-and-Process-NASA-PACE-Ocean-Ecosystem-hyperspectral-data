@@ -67,7 +67,7 @@ Map_Reflectance(target_wavelength=430)
 
 
 ![Wavelength_Map](430nm.png)
-*Example of a Chlorophyll a concentration map.*
+*Example of 430nm Reflectance map.*
 
 ![Chlorophyll a Map](chlor_a.png)
 *Example of a Chlorophyll a concentration map.*
@@ -116,6 +116,7 @@ plot_wavelength(target_latitude = 25.3280 , target_longitude = -83.9747)
 
 ![Wavelength Spectrum](wavelength.png)
 *Example of a wavelength spectrum for a specific pixel.*
+
 
 ## Additional Resources
 The repository also includes the original PACE Access Data notebook, as proposed by the Ocean Color Instrument (OCI), for users who wish to explore further:
