@@ -257,7 +257,7 @@ The repository also includes the original PACE Access Data notebook, as proposed
 
     Authors: Anna Windle (NASA, SSAI), Ian Carroll (NASA, UMBC), Carina Poulin (NASA, SSAI)
 
-This is the original Notebook supplied by NASA. 
+This is the original Jupyter Notebook used to download PACE data supplied by NASA. 
 ---
 
 By using these tools, STS and citizen scientists aim to be part of the solution in detecting, tracking and hopefully mitigating the impacts of Red Tide through advanced hyperspectral data analysis.
