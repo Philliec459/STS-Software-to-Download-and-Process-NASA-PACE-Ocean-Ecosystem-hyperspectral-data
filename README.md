@@ -189,7 +189,7 @@ chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blend
 
 ```
 
->![Chlorophyll a Map](chlor_a_zoom.png)
+>![Chlorophyll a Map](chlor_a.png)
 >*Example of a Chlorophyll a concentration map May 12, 2024.*
 >![Chlorophyll a Map](WorldView.png)
 >*WorldView Chlorophyll a May 12, 2024
