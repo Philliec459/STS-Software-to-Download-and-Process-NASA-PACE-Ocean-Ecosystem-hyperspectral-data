@@ -74,22 +74,21 @@ Map_Reflectance(target_wavelength=430)
 >*Example of 430nm Reflectance map.*
 ---
 
-
+## This is our attempt to calculate Chlorophyll a using PACE data trying to follow the methods described in the source below:
 ```python
 
 '''
-Earth Data Tools Method Datad 2023 used for PACE Data
+We used the following source:
 
-Viewing Chlorophyll a — Algorithm Publication Tool.pdf
+        Earth Data Tools Method Datad 2023 used for PACE Data
 
-Jeremy Werdell and John O'Reilly and Chuanmin Hu and Lian Feng and 
-Zhongping Lee and Bryan Franz and Sean Bailey and Christopher Proctor, 
-Chlorophyll a, Earth Data Publications Tool, November 6, 2023
+        Viewing Chlorophyll a — Algorithm Publication Tool.pdf
+
+        Jeremy Werdell and John O'Reilly and Chuanmin Hu and Lian Feng and 
+        Zhongping Lee and Bryan Franz and Sean Bailey and Christopher Proctor, 
+        Chlorophyll a, Earth Data Publications Tool, November 6, 2023
 '''
 
-# Assume 'wavelengths' and 'reflectance_data' are defined
-# wavelengths = ...
-# reflectance_data = ...
 
 # Identify indices for the required bands
 band_442 = np.argmin(np.abs(wavelengths - 442))
@@ -123,7 +122,6 @@ CI = Rrs_555 - (Rrs_442 + (555 - 442) / (670 - 442) * (Rrs_670 - Rrs_442))
 # chlor_a = 10**(-0.4287 + 230.47 * CI)
 # is this used for anything?
 
-
 '''
 2. chlor_a is then calculated following the OCx algorithm, which is a fourth-order polynomial relationship between a ratio of Rrs and chlor_a: 
 '''
@@ -150,8 +148,6 @@ R = np.maximum.reduce([Rrs_442 / Rrs_555, Rrs_490 / Rrs_555, Rrs_510 / Rrs_555])
 log_chlor_a_OCx = a0 + a1 * np.log10(R) + a2 * np.log10(R)**2 + a3 * np.log10(R)**3 + a4 * np.log10(R)**4
 chlor_a_OCx = 10**log_chlor_a_OCx
 
-
-
 '''
 3. For chlor_a retrievals below 0.25 mg m-3, the CI algorithm is used.
 
@@ -159,7 +155,6 @@ For chlor_a retrievals above 0.35 mg m-3, the OCx algorithm is used.
 
 In between these values, the CI and OCx algorithm are blended using a weighted approach:
 '''
-
 
 # Initialize the chlorophyll-a concentration array
 chl_a_CI = np.zeros_like(CI)
@@ -182,8 +177,6 @@ chl_a_CI[negative_CI_mask] = chlor_a_OCx[negative_CI_mask]
 # Blend CI and OCx for values in between
 chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blended_CI_mask])) / (t2 - t1) +
                              (chlor_a_OCx[blended_CI_mask] * (chlor_aCI[blended_CI_mask] - t1)) / (t2 - t1))
-
-
 
 ```
 
