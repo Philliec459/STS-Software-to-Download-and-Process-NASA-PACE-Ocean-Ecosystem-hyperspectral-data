@@ -1,3 +1,4 @@
+![logo](PACE.png)
 ![logo](sts_nasa.png)
 
 # Downloading NASA PACE Image Data Using STS Customized Hyperspectral Software
