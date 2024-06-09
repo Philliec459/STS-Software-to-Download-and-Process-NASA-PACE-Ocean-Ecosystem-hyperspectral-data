@@ -25,7 +25,7 @@ NASA's [PACE](https://pace.gsfc.nasa.gov) satellite provides hyperspectral data 
          699 701 702 703]
 
 ## STS Tools and Methodology
-STS uses Geospatial Solution's HyperCoast software to download PACE data. We use HyperCoast because it does shows the footprint of available data prior to downloading. The user can then choose the PACE data they want for their analysis from the list of available data.
+STS uses Geospatial Solution's HyperCoast software to download PACE data. We use HyperCoast because it shows the footprint of available data prior to downloading. The user can then choose the PACE data they want for their analysis from the list of available data.
 
 ```python
 results, gdf = hypercoast.search_pace(
@@ -246,7 +246,7 @@ chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blend
 >*WorldView Chlorophyll a map May 21, 2024.*
 ---
 
-### Since our PACE Webinar on June 7, we are also useing [WorldView](https://worldview.earthdata.nasa.gov/?v=-99.09292764857383,18.857870096514613,-73.64517039265459,32.90845125461138&l=Reference_Labels_15m(hidden),Reference_Features_15m(hidden),Coastlines_15m,OCI_PACE_Chlorophyll_a,VIIRS_NOAA20_CorrectedReflectance_TrueColor(hidden),VIIRS_SNPP_CorrectedReflectance_TrueColor(hidden),MODIS_Aqua_CorrectedReflectance_TrueColor(hidden),MODIS_Terra_CorrectedReflectance_TrueColor&lg=true&t=2024-06-07-T14%3A54%3A38Z) to compare our calculated Chlorophyll_a to their products and tweak our code and displays as needed. WorldView is an impressive product from NASA. 
+### Since our PACE Webinar on June 7, we are also using [WorldView](https://worldview.earthdata.nasa.gov/?v=-99.09292764857383,18.857870096514613,-73.64517039265459,32.90845125461138&l=Reference_Labels_15m(hidden),Reference_Features_15m(hidden),Coastlines_15m,OCI_PACE_Chlorophyll_a,VIIRS_NOAA20_CorrectedReflectance_TrueColor(hidden),VIIRS_SNPP_CorrectedReflectance_TrueColor(hidden),MODIS_Aqua_CorrectedReflectance_TrueColor(hidden),MODIS_Terra_CorrectedReflectance_TrueColor&lg=true&t=2024-06-07-T14%3A54%3A38Z) to compare our calculated Chlorophyll_a to their products and tweak our code and displays as needed. WorldView is an impressive product from NASA. 
 ---
 
 
