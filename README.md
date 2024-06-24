@@ -53,87 +53,231 @@ This notebook provide a guide for users to access and analyze hyperspectral data
 ## Example Outputs
 Below are examples of the outputs you can generate using our notebooks:
 
-### Waveleng Plot from one PACE Pixel:
+### Heatmap from Pixels Selected from the Map:
 ```python
-def plot_wavelength(target_latitude, target_longitude):
-        # Find the closest grid point to the target latitude and longitude
-        lat_idx, lon_idx = find_closest_grid_point(latitudes, longitudes, target_latitude, target_longitude)
-        
-        # Extract reflectance data for the grid point across all wavelengths
-        reflectance_spectrum = reflectance_data[lat_idx, lon_idx, :]
-        
-        # Ensure the dimensions match
-        print(f"Wavelengths shape: {wavelengths.shape}")
-        print(f"Reflectance spectrum shape: {reflectance_spectrum.shape}")
-        
-        # Plot reflectance vs. wavelength
-        plt.figure(figsize=(12, 6))
-        #plt.plot(wavelengths, reflectance_spectrum, marker='o',color='red')
-        plt.plot(wavelengths, reflectance_spectrum,color='red',linewidth=3)
-        #plt.yscale('log')
-        plt.ylim(0,0.02)
-        plt.xlim(300,1000)
-        
-        plt.xlabel('Wavelength (nm)')
-        plt.ylabel('Reflectance')
-        plt.title(f'PACE Reflectance Spectrum at Lat: {latitudes[lat_idx, lon_idx]}, Lon: {longitudes[lat_idx, lon_idx]}')
-        
-        # Edge colors picked from image below and sent to Mike 
-        plt.axvspan(300, 400, alpha=0.5, color='purple',label='Near UV from 300-400m')
-        plt.axvspan(400, 450, alpha=0.5, color='violet',label='Violet 400-450m')
-        plt.axvspan(450, 495, alpha=0.2, color='blue',label='Blue from 450-495nm')
-        plt.axvspan(495, 550, alpha=0.2, color='green',label='Green from 495-550nm')
-        plt.axvspan(550, 590, alpha=0.2, color='yellow',label='Yellow from 550-590nm')
-        plt.axvspan(590, 630, alpha=0.2, color='orange',label='Orange from 590-630nm')
-        plt.axvspan(630, 700, alpha=0.2, color='red',label='Red from 630-700nm')
-        plt.axvspan(700, 1000, alpha=1, color='lavender',label='Near IR from 700-1,000nm')
-        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
-        
-        plt.grid(True)
-        plt.show()
 
-plot_wavelength(target_latitude = 25.3280 , target_longitude = -83.9747)
+
+    
+    # Plot reflectance map for the larger region, showing the target location
+    plt.figure(figsize=(12, 7))
+    map_projection = ccrs.PlateCarree()
+    ax = plt.axes(projection=map_projection)
+    ax.set_extent([-98, -77, 20, 35], crs=ccrs.PlateCarree())  # Florida region
+    im = ax.pcolormesh(lon, lat, reflectance_at_target, vmin=0.0, vmax=0.02, cmap='rainbow')
+
+    ax.coastlines(resolution='10m')
+    ax.add_feature(cartopy.feature.STATES, linewidth=0.5)
+    ax.plot(longitude, latitude, marker='*', markersize=26, color='black')
+    ax.plot(longitude, latitude, marker='*', markersize=15, color='yellow')
+     
+    ax.add_feature(cfeature.LAND)
+    ax.add_feature(cfeature.RIVERS)
+    ######ax.add_feature(cfeature.OCEAN)
+    #####ax.add_feature(cfeature.COASTLINE)
+    #####ax.add_feature(cfeature.BORDERS, linestyle=':')
+    ax.add_feature(cfeature.LAKES, alpha=0.5)
+      
+    
+    # Set ticks and format them
+    ax.set_xticks(np.linspace(-98, -77, 5), crs=map_projection)
+    ax.set_yticks(np.linspace(20, 35, 5), crs=map_projection)
+    lon_formatter = LongitudeFormatter(zero_direction_label=True)
+    lat_formatter = LatitudeFormatter()
+    ax.xaxis.set_major_formatter(lon_formatter)
+    ax.yaxis.set_major_formatter(lat_formatter)
+
+    plt.colorbar(im, label='Reflectance')
+    plt.title(f'Reflectance at {target_wavelength} nm')
+    plt.show()
+
+    
+    # Plot histogram of the data
+    plt.figure(figsize=(10, 1))
+    plt.hist(reflectance_at_target.flatten(), bins=100, range=(0.0, 0.02), color='blue', edgecolor='black')
+    plt.xlabel('Reflectance')
+    plt.ylabel('Frequency')
+    plt.title(f'Reflectance Histogram at {target_wavelength} nm')
+    plt.grid(True)
+    plt.show()
+ 
 ```
 
->![Wavelength Spectrum](wavelength.png)
->*Example of a wavelength spectrum for a specific pixel.*
+>![Wavelength Spectrum](HeatMap.png)
+>*Example of a wavelength spectrum for Selected pixels.*
 ---
 
-### Reflectance Maps at any of the above wavelengths:
+### HyperCube for Real Time selection of Pixels using Qt:
 
 ```python
-def Map_Reflectance(target_wavelength):
+class PACEVisualizer(QMainWindow):
+    def __init__(self, dataset):
+        super().__init__()
+        self.dataset = dataset
+        self.spectra_data = []  # To store spectra data for successive plots
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('PACE Data Visualizer')
+        
+        #         window.setGeometry(x, y, width, height)
+        #self.setGeometry(100, 100, 1200, 900)  # Larger window size for better visibility
+        self.setGeometry(10, 100, 1000, 700)  # Larger window size for better visibility
+        
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
+        
+        layout = QVBoxLayout(self.central_widget)
+        
+        self.fig = Figure(figsize=(10, 8))
+        self.canvas = FigureCanvas(self.fig)
+        layout.addWidget(self.canvas)
+        
+        self.ax = self.fig.add_subplot(111, projection=ccrs.PlateCarree())
+        self.canvas.mpl_connect('button_press_event', self.onclick)
+        
+        self.plot_map()
+
+        # Add buttons
+        self.button_layout = QHBoxLayout()
+
+        self.close_button = QPushButton("Close Application", self)
+        self.close_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.close_button.setStyleSheet("font-size: 16px; font-weight: bold; padding: 10px; background-color: red; color: white;")
+        self.close_button.clicked.connect(self.close_application)
+        self.button_layout.addWidget(self.close_button)
+
+        self.clear_button = QPushButton("Clear Data", self)
+        self.clear_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.clear_button.setStyleSheet("font-size: 16px; font-weight: bold; padding: 10px; background-color: blue; color: white;")
+        self.clear_button.clicked.connect(self.clear_data)
+        self.button_layout.addWidget(self.clear_button)
+
+        layout.addLayout(self.button_layout)
+
+    def plot_map(self):
+        target_wavelength = 520  # Default target wavelength
         wavelength_index = np.argmin(np.abs(wavelengths - target_wavelength))
         reflectance_at_target = reflectance_data[:, :, wavelength_index]
-        
-        # Plot the reflectance
-        plt.figure(figsize=(12, 8))    
-        map_projection = ccrs.PlateCarree()
-        ax = plt.axes(projection=map_projection)
-        ax.set_extent([-98, -77, 20, 35], crs=ccrs.PlateCarree())  # Florida region
-        
-        # Plot the reflectance data using pcolormesh
-        im = ax.pcolormesh(lon, lat, reflectance_at_target, cmap='rainbow')
-        ax.coastlines(resolution='10m')
-        ax.add_feature(cartopy.feature.STATES, linewidth=0.5)
-        
+
+        self.ax.clear()
+        self.ax.set_extent([-98, -77, 20, 35], crs=ccrs.PlateCarree())  # Florida region
+        im = self.ax.pcolormesh(lon, lat, reflectance_at_target, vmin=0.0, vmax=0.02, cmap='rainbow')
+
+        self.ax.coastlines(resolution='10m')
+        self.ax.add_feature(cfeature.STATES, linewidth=0.5)
+        self.ax.add_feature(cfeature.LAND)
+        self.ax.add_feature(cfeature.RIVERS)
+        self.ax.add_feature(cfeature.LAKES, alpha=0.5)
+
         # Set ticks and format them
-        ax.set_xticks(np.linspace(-91, -77, 5), crs=map_projection)
-        ax.set_yticks(np.linspace(20, 35, 5), crs=map_projection)
+        self.ax.set_xticks(np.linspace(-98, -77, 5), crs=ccrs.PlateCarree())
+        self.ax.set_yticks(np.linspace(20, 35, 5), crs=ccrs.PlateCarree())
         lon_formatter = LongitudeFormatter(zero_direction_label=True)
         lat_formatter = LatitudeFormatter()
-        ax.xaxis.set_major_formatter(lon_formatter)
-        ax.yaxis.set_major_formatter(lat_formatter)
-        
-        plt.colorbar(im, label=f'Reflectance at {target_wavelength} nm')
-        plt.title(f'Reflectance at {target_wavelength} nm around Florida')
-        plt.show()
+        self.ax.xaxis.set_major_formatter(lon_formatter)
+        self.ax.yaxis.set_major_formatter(lat_formatter)
 
-Map_Reflectance(target_wavelength=430)
+        plt.colorbar(im, ax=self.ax, label='Reflectance')
+        self.ax.set_title(f'Reflectance at {target_wavelength} nm')
+        self.canvas.draw()
+
+    def onclick(self, event):
+        if event.inaxes == self.ax:
+            lon, lat = event.xdata, event.ydata
+            print(f"Clicked at lon: {lon}, lat: {lat}")
+            self.plot_spectrum(lon, lat)
+            
+    def plot_spectrum(self, lon, lat):
+        try:
+            # Find the closest grid point
+            lat_idx, lon_idx = self.find_closest_grid_point(lat, lon)
+            spectrum = reflectance_data[lat_idx, lon_idx, :]
+
+            # Store the spectrum data
+            self.spectra_data.append((lon, lat, spectrum))
+
+            # Create a new figure for the spectrum plot if it doesn't exist
+            if not hasattr(self, 'plot_window'):
+                self.plot_window = QMainWindow()
+                self.plot_fig = Figure(figsize=(12, 8))
+                self.plot_canvas = FigureCanvas(self.plot_fig)
+                self.plot_window.setCentralWidget(self.plot_canvas)
+                #         window.setGeometry(x, y, width, height)
+                #self.plot_window.setGeometry(200, 200, 800, 600)
+                self.plot_window.setGeometry(1200, 700, 500, 400)
+                self.plot_window.setWindowTitle('Spectrum Plot')
+                self.plot_window.show()
+                
+                
+                # ?????
+                #self.plot_window.raise_()  # Bring the plot wind
+
+            # Plot all stored spectra
+            self.plot_fig.clear()
+            ax = self.plot_fig.add_subplot(111)
+            for lon, lat, spectrum in self.spectra_data:
+                ax.plot(wavelengths, spectrum, label=f'lon: {lon:.2f}, lat: {lat:.2f}')
+            ax.set_xlim(np.min(wavelengths), np.max(wavelengths))
+            ax.set_xlabel('PACE Wavelength (nm)')
+            ax.set_ylabel('Reflectance')
+            ax.set_title('Spectra at Target Locations')
+            
+            
+            ax.axvspan(300, 400, alpha=0.5, color='purple')
+            ax.axvspan(400, 450, alpha=0.5, color='violet')
+            ax.axvspan(450, 495, alpha=0.2, color='blue')
+            ax.axvspan(495, 550, alpha=0.2, color='green')
+            ax.axvspan(550, 590, alpha=0.2, color='yellow')
+            ax.axvspan(590, 630, alpha=0.2, color='orange')
+            ax.axvspan(630, 700, alpha=0.2, color='red')
+            ax.axvspan(700, 1000, alpha=1,  color='lavender')
+            
+            target_wavelength = 520
+            ax.axvspan(target_wavelength-1, target_wavelength+1, alpha=1, color='red')
+
+            ax.grid()
+            ax.legend(loc='upper right')
+            self.plot_canvas.draw()
+
+        except IndexError as e:
+            print(f"Error: {e}")
+            print("Clicked point is out of bounds due to indexing error.")
+    
+    def find_closest_grid_point(self, latitude, longitude):
+        distances = np.sqrt((lat - latitude)**2 + (lon - longitude)**2)
+        min_distance_idx = np.unravel_index(np.argmin(distances), distances.shape)
+        return min_distance_idx
+
+    def clear_data(self):
+        self.spectra_data = []
+        if hasattr(self, 'plot_fig'):
+            self.plot_fig.clear()
+            self.plot_canvas.draw()
+        print("Cleared selected spectra data.")
+
+    def close_application(self):
+        # Ensure the plot window is closed properly
+        if hasattr(self, 'plot_window') and self.plot_window is not None:
+            self.plot_window.close()
+        self.close()  # Close the main window
+
+def main():
+    app = QApplication(sys.argv)
+    ex = PACEVisualizer(dataset)
+    ex.show()     
+    sys.exit(app.exec_())  # Use sys.exit to properly exit the application
+    #plt.close(plt.gcf())
+    #plt.close('all')
+    #plt.close(1)
+    
+    
+if __name__ == '__main__':
+    main()
+
 ```
 
->![Wavelength_Map](430nm2.png)
->*Example of 430nm Reflectance map May 12, 2024.*
+>![Wavelength_Map](HyperCube.png)
+>*Example of HyperCube selection of Pixels for May 21, 2024.*
 ---
 ### Process PACE data for Chlorophyll a:
 
