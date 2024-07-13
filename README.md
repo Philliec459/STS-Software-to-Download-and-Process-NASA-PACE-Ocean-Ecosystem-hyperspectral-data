@@ -295,7 +295,65 @@ We used the following source:
         Zhongping Lee and Bryan Franz and Sean Bailey and Christopher Proctor, 
         Chlorophyll a, Earth Data Publications Tool, November 6, 2023
 '''
+#---------------------------------------------------------------------------------------------------#
+#------------------------    Primary chlor_a calcs    ----------------------------------------------#
+#------------------------     from L2chlor_a.py       ----------------------------------------------#
+#------------------------   ocCI, OCx and Blending     ---------------------------------------------#
+#---------------------  We added PACE Parameters for OCx   -----------------------------------------#
+#---------------------      We changed wavelengths     ---------------------------------------------#
+#---------------------------------------------------------------------------------------------------#
+def L2chlor_a(Rrs_442, Rrs_490, Rrs_510, Rrs_555, Rrs_670): # originally from HyperCP code snippet L2chlor_a.py
+    '''OCx'''
+    a0, a1, a2, a3, a4 = 0.32814, -3.20725, 3.22969, -1.36769, -0.81739
+    
+    print(f"Rrs_442: min={np.nanmin(Rrs_442)}, max={np.nanmax(Rrs_442)}, mean={np.nanmean(Rrs_442)}")
+    print(f"Rrs_490: min={np.nanmin(Rrs_490)}, max={np.nanmax(Rrs_490)}, mean={np.nanmean(Rrs_490)}")
+    print(f"Rrs_510: min={np.nanmin(Rrs_510)}, max={np.nanmax(Rrs_510)}, mean={np.nanmean(Rrs_510)}")
+   
+    
+    #######Rrs_blue = np.maximum(np.maximum(Rrs_442, Rrs_490), Rrs_510)
+    #Rrs_blue = np.maximum(Rrs_442, Rrs_490)
+    #Rrs_blue = Rrs_442
+    Rrs_blue = (Rrs_442 + Rrs_490 + Rrs_510) / 3
+    #Rrs_blue = (Rrs_490 + Rrs_510) / 2
+    chlor_a_OCx = 10**(a0 +  a1 * (np.log10(Rrs_blue / Rrs_555))    +
+                             a2 * (np.log10(Rrs_blue / Rrs_555))**2 +
+                             a3 * (np.log10(Rrs_blue / Rrs_555))**3 +
+                             a4 * (np.log10(Rrs_blue / Rrs_555))**4 )
 
+    
+    ''' CI 
+    CI = Rrs(λgreen) − [Rrs(λblue)+ (Rrs(λred) − Rrs(λblue))*(λgreen−λblue)/(λred−λblue)]'''
+    CI  = Rrs_555    - (Rrs_442   + (Rrs_670  -  Rrs_442)   *((555 - 442) / (670 - 442)))
+    
+    chlor_a_CI = 10**(-0.4287 + 230.47 * CI)
+
+    
+    # For chlor_a retrievals below 0.25 mg m , the CI algorithm is used - Werdell
+    # For chlor_a retrievals above 0.35 mg m , the OCx algorithm is used - Werdell
+    # Use blending between - Werdell
+    ''' Blending CI and OCx algorithms'''
+    t1 = 0.25
+    t2 = 0.35
+    chlor_a = np.where(chlor_a_CI <= 0.25, chlor_a_CI,
+                       
+                       np.where(chlor_a_CI >= 0.35, chlor_a_OCx,
+                                
+                                (chlor_a_CI * (t2 - chlor_a_CI) / (t2 - t1)) + (chlor_a_OCx * (chlor_a_CI - t1) / (t2 - t1))))               
+
+    return chlor_a
+
+#---------------------------------------------------------------------------------------------------#
+#--------------------------      Load Data        --------------------------------------------------#
+#-------------------------     Calc. chlor_a       -------------------------------------------------#
+#---------------------------------------------------------------------------------------------------#
+# Load your PACE dataset
+dataset = nc.Dataset(filepath, 'r')
+
+lat = dataset.groups['navigation_data'].variables['latitude'][:]
+lon = dataset.groups['navigation_data'].variables['longitude'][:]
+wavelengths = dataset['sensor_band_parameters']['wavelength'][:184]
+reflectance_data = dataset['geophysical_data']['Rrs'][:]
 
 # Identify indices for the required bands
 band_442 = np.argmin(np.abs(wavelengths - 442))
@@ -311,73 +369,18 @@ Rrs_510 = reflectance_data[:, :, band_510]
 Rrs_555 = reflectance_data[:, :, band_555]
 Rrs_670 = reflectance_data[:, :, band_670]
 
-'''
-1. chlor_a is first calculated using the CI algorithm, which is a three-band reflectance difference algorithm employing the difference between sensor specific Rrs in the green band and a reference formed linearly between Rrs in the blue and red bands (bands are instrument specific - see Table 1):
-CI = Rrs(λgreen) − [Rrs(λblue) + (λgreen − λblue)/(λred − λblue) ∗ (Rrs(λred) − Rrs(λblue))] 
-'''
 
-# Calculate CI
-CI = Rrs_555 - (Rrs_442 + (555 - 442) / (670 - 442) * (Rrs_670 - Rrs_442))
+chlor_a = L2chlor_a(Rrs_442, Rrs_490, Rrs_510, Rrs_555, Rrs_670)
 
-# A calculation of CI chlor_a is done using two coefficients (a0CI = -0.4287 and a1CI = 230.47) specified by Hu et al (2019), where:
-# chlor_a = 10**(-0.4287 + 230.47 * CI)
-# is this used for anything?
+# Create the mask based on valid Rrs values
+mask = (Rrs_442 >= 0) & (Rrs_490 >= 0) & (Rrs_510 >= 0) & (Rrs_555 >= 0) & (Rrs_670 >= 0)
 
-'''
-2. chlor_a is then calculated following the OCx algorithm, which is a fourth-order polynomial relationship between a ratio of Rrs and chlor_a: 
-'''
-    
-# Calculate chlor_a using CI
-chlor_aCI = 10**(0.32814 + -3.20725*np.log10(Rrs_442 / Rrs_555)**1 + 
-                            3.22969*np.log10(Rrs_442 / Rrs_555)**2 + 
-                           -1.36769*np.log10(Rrs_442 / Rrs_555)**3 + 
-                           -0.81739*np.log10(Rrs_442 / Rrs_555)**4)
+# Null out the chlor_a values that do not fit under the mask
+chlor_a[~mask] = np.nan  # You can use any invalid value here, e.g., -9999
 
 
-'''
-OCx Method (I think?)
-'''
+print(f"chlor_a: min={np.nanmin(chlor_a)}, max={np.nanmax(chlor_a)}, mean={np.nanmean(chlor_a)}")
 
-# Define OCx algorithm coefficients for OC4v6 as an example
-a0, a1, a2, a3, a4 = -0.3704, -3.9622, 1.7441, 1.4487, -0.2874
-
-# Calculate the OCx ratio
-R = np.maximum.reduce([Rrs_442 / Rrs_555, Rrs_490 / Rrs_555, Rrs_510 / Rrs_555])
-
-
-# Calculate chlor_a using OCx
-log_chlor_a_OCx = a0 + a1 * np.log10(R) + a2 * np.log10(R)**2 + a3 * np.log10(R)**3 + a4 * np.log10(R)**4
-chlor_a_OCx = 10**log_chlor_a_OCx
-
-'''
-3. For chlor_a retrievals below 0.25 mg m-3, the CI algorithm is used.
-
-For chlor_a retrievals above 0.35 mg m-3, the OCx algorithm is used. 
-
-In between these values, the CI and OCx algorithm are blended using a weighted approach:
-'''
-
-# Initialize the chlorophyll-a concentration array
-chl_a_CI = np.zeros_like(CI)
-
-# Define thresholds
-t1 = 0.25
-t2 = 0.35
-
-# Apply the OCI algorithm to estimate chlorophyll concentration
-positive_CI_mask = chlor_aCI > t2
-negative_CI_mask = chlor_aCI < t1
-blended_CI_mask = (~positive_CI_mask) & (~negative_CI_mask)
-
-# Calculate chlorophyll-a for positive CI values
-chl_a_CI[positive_CI_mask] = chlor_aCI[positive_CI_mask]
-
-# Calculate chlorophyll-a for negative CI values
-chl_a_CI[negative_CI_mask] = chlor_a_OCx[negative_CI_mask]
-
-# Blend CI and OCx for values in between
-chl_a_CI[blended_CI_mask] = ((chlor_aCI[blended_CI_mask] * (t2 - chlor_aCI[blended_CI_mask])) / (t2 - t1) +
-                             (chlor_a_OCx[blended_CI_mask] * (chlor_aCI[blended_CI_mask] - t1)) / (t2 - t1))
 
 ```
 >![Chlorophyll a Map](chlor_a_zoom2.png)
