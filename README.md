@@ -285,7 +285,7 @@ if __name__ == '__main__':
 ```python
 
 '''
-We used the following source:
+We used the following source from NASA's HyperCP source code:
 
         Earth Data Tools Method Datad 2023 used for PACE Data
 
